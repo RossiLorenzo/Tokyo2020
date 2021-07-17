@@ -1,0 +1,75 @@
+<head>
+	<!-- Jquery -->
+	<script src="js/jquery.js"></script>
+	<!-- Datatables -->
+	<link rel="stylesheet" type="text/css" href="DataTables/datatables.min.css"/>
+ 	<script type="text/javascript" src="DataTables/datatables.min.js"></script>
+	<!-- Materialize Design -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+            
+	<style type="text/css">
+		.page-wrapper {
+			margin: 30px;
+		}
+
+		.row {
+			display: flex;
+			flex-direction: row;
+			flex-wrap: wrap;
+			width: 100%;
+		}
+
+		.column {
+			display: flex;
+			flex-direction: column;
+			flex-basis: 100%;
+			flex: 1;
+			margin: 30px;
+		}
+	</style>
+
+</head>
+
+<body>
+	<!-- NavBar -->
+	<nav class="indigo darken-1">
+		<div class="nav-wrapper">
+			<span class="brand-logo center"><img style="vertical-align:middle" src="https://olympics.com/images/static/navigation-satellite/navigation-menu-logo.svg", width=128px, height=40px />Tokyo 2020</span>
+		</div>
+	</nav>
+	<!-- Main Content -->
+	<div class="page-wrapper">
+		<div class='row'>
+			<div class='column' style="height: 575px; flex-grow: 1.5">
+				<h3>All Athletes</h3>
+				<table id="athletes" class="display" style="width:100%; flex-grow: 1">
+					<thead>
+						<tr>
+							<th>Name</th>
+							<th>Nation</th>
+							<th>Discipline</th>
+						</tr>
+					</thead>
+					<tbody></tbody>
+				</table>
+			</div>
+			<div class='column' style="height: 575px;">
+				<h3 id='athlete_detail'></h3>
+				<div class="page-wrapper">
+					<div class='row'>
+						<img id="athlete_img" width="90" height="90" style="margin:8px;">
+						<img id="athlete_flag" width="24" height="12" style="margin-top: 23px;margin-right: 6px;">
+						<h6 id="athlete_name"></h6>
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+
+
+
+
+<script src="js/athletes.js"></script>
