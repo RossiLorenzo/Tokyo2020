@@ -36,7 +36,7 @@
   }
 
   .navbar {
-    background-image: linear-gradient(310deg, #800000 0%, #fff 60%);
+    background-image: linear-gradient(310deg, #8B2030 0%, #EAEAEA 60%);
   }
 
   .page_container {
@@ -50,7 +50,7 @@
   }
 
   .card_title {
-    background-image: linear-gradient(310deg, #fff 0%, #800000 50%, #fff 100%);
+    background-image: linear-gradient(310deg, #EAEAEA 0%, #8B2030 50%, #EAEAEA 100%);
     border-radius: inherit;
     color: white;
     text-align: center;
@@ -68,7 +68,7 @@
     width: 48px;
     height: 48px;
     border-radius: 0.75rem;
-    background-image: linear-gradient(310deg, #fff 0%, #800000 50%, #fff 100%);
+    background-image: linear-gradient(310deg, #EAEAEA 0%, #8B2030 50%, #EAEAEA 100%);
     display: inline-block;
   }
 
@@ -83,6 +83,7 @@
     border: 0px;
     padding: 12px;
     margin-bottom: 12px;
+    background-color: #EAEAEA;
   }
 
   .btn.focus, .btn:focus {
@@ -90,11 +91,11 @@
   }
 
   .btn-ita {
-    background:linear-gradient(to right, #00b347 0%, #fff 25%, #fff 75%, #800000 100%);
+    background: linear-gradient(to right, #6BA368 3%, #EAEAEA 3%, #EAEAEA 6%, #8B2030 6%, #8B2030 9%, #EAEAEA 9%, #EAEAEA 100%);
   }
 
   .bg-ita {
-    background:linear-gradient(to right, #00b347 0%, #fff 40%, #fff 60%, #800000 100%);
+    background: linear-gradient(to right, #6BA368 1%, #fff 1%, #fff 2%, #8B2030 2%, #8B2030 3%, #fff 3%, #fff 100%);
   }
 
 </style>
@@ -121,6 +122,56 @@
 
       <!-- Events -->
       <div class="col-sm-8">
+        <div class="row">
+          <div class="col-sm-12">
+        <div class="card_container">
+          <div class="card_title">
+            <h5 style="font-size: 1.5rem;">Italians Today</h5>
+          </div>
+          <div class="card_body">
+            <div id="todayitalians">
+              <table>
+                  <thead>
+                    <th>Sport</th>
+                    <th>Event Name</th>
+                    <th>Status</th>
+                    <th>Start Time</th>
+                    <th>Athletes</th>
+                  </thead>                
+                  <tbody>
+                    <tr v-if="EventsList.length === 0"><td>No data</td></tr>
+                    <tr v-for="event in EventsList">
+                      <td>
+                        <img v-bind:src="event.icon" width="32" height="32">
+                        {{event.sportName}}
+                      </td>
+                      <td>
+                        <a :href="event.link" target="_blank" style="color: black"  >{{event.name}}</a>
+                      </td>
+                      <td>
+                        <span :style="{ color: event.color }">
+                          <i class="fas fa-circle"></i>
+                          {{event.status}}
+                        </span>  
+                      </td>
+                      <td>{{event.fullStartDate}}</td>
+                      <td v-if="event.participants_ids.length > 0">
+                        {{event.participants_ids.filter(x => x.noc == 'ITA').map(x => x.name).join(', ')}}
+                      </td>
+                    </tr>
+
+
+                  </tbody>
+              </table>
+           
+                  
+                  
+            </div>
+              
+            </div>
+          </div>
+        </div>
+    <div class="col-sm-12">
         <div class="card_container">
           <div class="card_title">
             <h5 style="font-size: 1.5rem;">Events Today</h5>
@@ -130,10 +181,10 @@
 
                 <!-- Sports --> 
                 <div class="col-sm-3" v-for="(sport, index) in Object.keys(EventsList)">
-                    <button  class="btn btn-lg" style="border-radius: 1rem;" data-toggle="collapse" :data-target="'#collapse' + index" :class="((EventsList[sport].filter(x => x.participants_noc.includes('ITA')).length > 0) ? 'btn-ita' : '')" onclick="$('.show').removeClass('show')">
-                    <img v-bind:src="EventsList[sport][0].icon" width="24" height="24">
+                    <button  class="btn btn-block" style="border-radius: 1rem;" data-toggle="collapse" :data-target="'#collapse' + index" :class="((EventsList[sport].filter(x => x.participants_noc.includes('ITA')).length > 0) ? 'btn-ita' : '')" onclick="$('.show').removeClass('show')">
+                    <img v-bind:src="EventsList[sport][0].icon" width="32" height="32">
                     {{sport}}
-                      <i v-if="EventsList[sport].filter(x => x.medalFlag.includes('1')).length > 0" class="fa fa-medal"></i>
+                    <i v-if="EventsList[sport].filter(x => x.medalFlag.includes('1')).length > 0" class="fa fa-medal"></i>
                   </button>
                 </div>
                 
@@ -148,10 +199,11 @@
                     <th>Status</th>
                   </thead>
                   <tr v-if="EventsList[sport].length === 0"><td>No data</td></tr>
-                  <tr v-else v-for="event in EventsList[sport]" :class="((event.participants_noc.includes('ITA')) ? 'bg-ita' : '')">
+                  <tr v-else v-for="event in EventsList[sport]">
                     <td>
+                      <img v-if="((event.participants_noc.includes('ITA')) ? 'bg-ita' : '')" src="img/flags/ITA.png" height="12" width="21" style="margin-right: 4px;"></img>
                       <i :class="'fas fa-' + event.gender" style="margin-right: 4px;"></i>
-                      <a :href="event.link" target="_blank" style="color: black">{{event.name}}</a>
+                      <a :href="event.link" target="_blank" style="color: black"  >{{event.name}}</a>
                       <i v-if="event.medalFlag == '1'" class="fa fa-medal"></i>
                     </td>
                     <td>{{event.fullStartDate}}</td>
@@ -165,13 +217,15 @@
                   </tr>
                 </tbody>
                 </table>
-              </div>
-            
+              </div>    
             </div>
               
             </div>
           </div>
         </div>
+      </div>
+    </div>
+
       <div class="col-sm-4">
         <div class="card_container">
           <div class="card_title">
