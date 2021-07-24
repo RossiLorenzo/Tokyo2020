@@ -35,6 +35,10 @@ async function get_headline(){
     async mounted() {
       let res = await check_news();
       this.NewsList = res;
+      setInterval(async () => {
+        let res = await check_news();
+        this.NewsList = res;
+      }, 60000)
     }
   }
 

@@ -1,275 +1,375 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <link rel="icon" type="image/png" href="https://olympics.com/favicon.ico">
-  <title>Olympics Dashboard</title>
-  <!--     Fonts and icons     -->
-  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
-  <!-- JQuery -->
-  <script src="js/jquery.js"></script>
-  <!-- Bootstrap -->
-  <link rel="stylesheet" href="css/bootstrap.css">
-  <script src="js/bootstrap.js"></script>
-  <!-- VUE -->
-  <script src="https://unpkg.com/vue@next"></script>
-  <!-- Font Awesome -->
-  <link href="fontawesome/css/all.css" rel="stylesheet">
-  <!-- Datatables -->
-  <link rel="stylesheet" type="text/css" href="DataTables/datatables.min.css"/>
-  <script type="text/javascript" src="DataTables/datatables.min.js"></script>
-  <!-- ChartJS -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.4.1/chart.min.js"></script>
-
-
-</head>
-
-<style type="text/css">
-  body{
-    background-color: #f8f9fa;
-  }
-
-  td {
-    padding: 3px;
-  }
-
-  .navbar {
-    background-image: linear-gradient(310deg, #8B2030 0%, #EAEAEA 60%);
-  }
-
-  .page_container {
-    padding: 1.5rem;
-  }
-
-  .card_container {
-    background-color: white;
-    border-radius: 1rem;
-    margin-bottom: 12px;
-  }
-
-  .card_title {
-    background-image: linear-gradient(310deg, #EAEAEA 0%, #8B2030 50%, #EAEAEA 100%);
-    border-radius: inherit;
-    color: white;
-    text-align: center;
-  }
-
-  .card_body {
-    padding: 1rem;
-  }
-
-  .text_right {
-    text-align: right;
-  }
-
-  .icon_container {
-    width: 48px;
-    height: 48px;
-    border-radius: 0.75rem;
-    background-image: linear-gradient(310deg, #EAEAEA 0%, #8B2030 50%, #EAEAEA 100%);
-    display: inline-block;
-  }
-
-  .icon_center {
-    color: #fff;
-    position: relative;
-    top: 25%;
-    right: 30%;
-  }
-
-  .btn {
-    border: 0px;
-    padding: 12px;
-    margin-bottom: 12px;
-    background-color: #EAEAEA;
-  }
-
-  .btn.focus, .btn:focus {
-    box-shadow: 0 0 0 0.2rem black;
-  }
-
-  .btn-ita {
-    background: linear-gradient(to right, #6BA368 3%, #EAEAEA 3%, #EAEAEA 6%, #8B2030 6%, #8B2030 9%, #EAEAEA 9%, #EAEAEA 100%);
-  }
-
-  .bg-ita {
-    background: linear-gradient(to right, #6BA368 1%, #fff 1%, #fff 2%, #8B2030 2%, #8B2030 3%, #fff 3%, #fff 100%);
-  }
-
-</style>
-<body>
-  <nav class="navbar">
-  <div class="navbar-brand">
-    <img src="https://olympics.com/tokyo-2020/en/d3images/header/olympics/bg-header__secondary-area--desktop-v2.svg" height="48" class="d-inline-block align-top" alt="">
-  </div>
-  </nav>
-
-  <div class="page_container">
-
-    <!-- Row of icon cards -->
-    <div id="iconcard" class="row">
-      <icon-card 
-        v-for="item in IconCardList" 
-        v-bind:card="item" 
-        v-bind:key="item.id"
-      ></icon-card>
-    </div>
-  
-    <!-- Main Row -->
-    <div class="row">
-
-      <!-- Events -->
-      <div class="col-sm-8">
-        <div class="row">
-          <div class="col-sm-12">
-        <div class="card_container">
-          <div class="card_title">
-            <h5 style="font-size: 1.5rem;">Italians Today</h5>
-          </div>
-          <div class="card_body">
-            <div id="todayitalians">
-              <table>
-                  <thead>
-                    <th>Sport</th>
-                    <th>Event Name</th>
-                    <th>Status</th>
-                    <th>Start Time</th>
-                    <th>Athletes</th>
-                  </thead>                
-                  <tbody>
-                    <tr v-if="EventsList.length === 0"><td>No data</td></tr>
-                    <tr v-for="event in EventsList">
-                      <td>
-                        <img v-bind:src="event.icon" width="32" height="32">
-                        {{event.sportName}}
-                      </td>
-                      <td>
-                        <a :href="event.link" target="_blank" style="color: black"  >{{event.name}}</a>
-                      </td>
-                      <td>
-                        <span :style="{ color: event.color }">
-                          <i class="fas fa-circle"></i>
-                          {{event.status}}
-                        </span>  
-                      </td>
-                      <td>{{event.fullStartDate}}</td>
-                      <td v-if="event.participants_ids.length > 0">
-                        {{event.participants_ids.filter(x => x.noc == 'ITA').map(x => x.name).join(', ')}}
-                      </td>
-                    </tr>
-
-
-                  </tbody>
-              </table>
-           
-                  
-                  
+   <head>
+      <meta charset="utf-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+      <link rel="icon" type="image/png" href="https://olympics.com/favicon.ico">
+      <title>Olympics Dashboard</title>
+      <!--     Fonts and icons     -->
+      <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
+      <!-- JQuery -->
+      <script src="js/jquery.js"></script>
+      <!-- Bootstrap -->
+      <link rel="stylesheet" href="css/bootstrap.css">
+      <script src="js/bootstrap.js"></script>
+      <!-- VUE -->
+      <script src="https://unpkg.com/vue@next"></script>
+      <!-- Font Awesome -->
+      <link href="fontawesome/css/all.css" rel="stylesheet">
+      <!-- Datatables -->
+      <link rel="stylesheet" type="text/css" href="DataTables/datatables.min.css"/>
+      <script type="text/javascript" src="DataTables/datatables.min.js"></script>
+      <!-- ChartJS -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.4.1/chart.min.js"></script>
+   </head>
+   <style type="text/css">
+      body{
+      background-color: #f8f9fa;
+      }
+      td {
+      padding: 3px;
+      }
+      .navbar {
+      background-image: linear-gradient(310deg, #8B2030 0%, #EAEAEA 60%);
+      }
+      .page_container {
+      padding: 1.5rem;
+      }
+      .card_container {
+      background-color: white;
+      border-radius: 1rem;
+      margin-bottom: 12px;
+      }
+      .card_title {
+      background-image: linear-gradient(310deg, #EAEAEA 0%, #8B2030 50%, #EAEAEA 100%);
+      border-radius: inherit;
+      color: white;
+      text-align: center;
+      }
+      .card_body {
+      padding: 1rem;
+      }
+      .card_body_lg {
+      padding: 1rem;
+      min-height: 350px;
+      }
+      .text_right {
+      text-align: right;
+      }
+      .icon_container {
+      width: 48px;
+      height: 48px;
+      border-radius: 0.75rem;
+      background-image: linear-gradient(310deg, #EAEAEA 0%, #8B2030 50%, #EAEAEA 100%);
+      display: inline-block;
+      }
+      .icon_center {
+      color: #fff;
+      position: relative;
+      top: 25%;
+      right: 30%;
+      }
+      .btn {
+      border: 0px;
+      padding: 12px;
+      margin-bottom: 12px;
+      background-color: #EAEAEA;
+      }
+      .btn.focus, .btn:focus {
+      box-shadow: 0 0 0 0.2rem black;
+      }
+      .btn-ita {
+      background: linear-gradient(to right, #6BA368 3%, #EAEAEA 3%, #EAEAEA 6%, #8B2030 6%, #8B2030 9%, #EAEAEA 9%, #EAEAEA 100%);
+      }
+      .bg-ita {
+      background: linear-gradient(to right, #6BA368 1%, #fff 1%, #fff 2%, #8B2030 2%, #8B2030 3%, #fff 3%, #fff 100%);
+      }
+      .fab.fa-instagram {
+        color: transparent;
+        background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
+        background: -webkit-radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
+        background-clip: text;
+        -webkit-background-clip: text;
+      }
+   </style>
+   <body>
+      <nav class="navbar">
+         <div class="navbar-brand">
+            <img src="https://olympics.com/tokyo-2020/en/d3images/header/olympics/bg-header__secondary-area--desktop-v2.svg" height="48" class="d-inline-block align-top" alt="">
+         </div>
+      </nav>
+      <div class="page_container">
+         <!-- Row of icon cards -->
+         <div id="iconcard" class="row">
+            <icon-card 
+               v-for="item in IconCardList" 
+               v-bind:card="item" 
+               v-bind:key="item.id"
+               ></icon-card>
+         </div>
+         <!-- Main Row -->
+         <div class="row">
+            <!-- Medals --> 
+            <div class="col-sm-4">
+               <div class="card_container">
+                  <div class="card_title">
+                     <h5 style="font-size: 1.5rem;">Medals</h5>
+                  </div>
+                  <div class="card_body_lg">
+                     <div>
+                        <div>
+                           <table id="medalsstanding" style="width: 100%;">
+                              <tbody>
+                                 <tr v-for="(medal, index) in MedalsList" >
+                                    <td>{{medal.rank}}</td>
+                                    <td><img :src="'img/flags/' + medal.noc + '.png'" height="12" width="21" style="margin-right: 4px;">{{medal.Sn}}</img></td>
+                                    <td><span style="font-size: 1.2em; color: gold;"><i class='fa fa-medal'></i></span>{{medal.g}}</td>
+                                    <td><span style="font-size: 1.2em; color: silver;"><i class='fa fa-medal'></i></span>{{medal.s}}</td>
+                                    <td><span style="font-size: 1.2em; color: #cd7f32;"><i class='fa fa-medal'></i></span>{{medal.b}}</td>
+                                    <td><span style="font-size: 1.2em;"><i class='fa fa-medal'></i></span>{{medal.tot}}</td>
+                                 </tr>
+                              </tbody>
+                           </table>
+                        </div>
+                     </div>
+                  </div>
+               </div>
             </div>
+            <!-- News -->
+            <div class="col-sm-4">
+               <div class="card_container">
+                  <div class="card_title">
+                     <h5 style="font-size: 1.5rem;">Top News</h5>
+                  </div>
+                  <div class="card_body_lg">
+                     <div id="todaynews" class="carousel slide" data-ride="carousel" data-interval="7500">
+                        <div class="carousel-inner">
+                           <div v-for="(news, item) in NewsList" :class="'carousel-item ' + news.is_active">
+                              <img :src="news.image">
+                              <div class="carousel-caption d-none d-md-block">
+                                 <a :href="news.link" target="_blank" style="color:white">
+                                    <h5>{{news.title}}</h5>
+                                 </a>
+                              </div>
+                           </div>
+                        </div>
+                        <a class="carousel-control-prev" href="#todaynews" role="button" data-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Previous</span>
+                        </a>
+                        <a class="carousel-control-next" href="#todaynews" role="button" data-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Next</span>
+                        </a>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <!-- COVID19 -->
+            <div class="col-sm-4">
+               <div class="card_container">
+                  <div class="card_title">
+                     <h5 style="font-size: 1.5rem;">COVID-19</h5>
+                  </div>
+                  <div class="card_body_lg">
+                     <div class="chart">
+                        <canvas id="chart-line" class="chart-canvas" height="300"></canvas>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="row">
+            <!-- Events -->
+            <div class="col-sm-8">
+               <div class="card_container">
+                  <div class="card_title">
+                     <h5 style="font-size: 1.5rem;">Events Today</h5>
+                  </div>
+                  <div class="card_body_lg">
+                     <div id="todayevents" class="row">
+                        <!-- Sports --> 
+                        <div class="col-sm-3" v-for="(sport, index) in Object.keys(EventsList)">
+                           <button  class="btn btn-block" style="border-radius: 1rem;" data-toggle="collapse" :data-target="'#collapse' + index" :class="((EventsList[sport].filter(x => x.participants_noc.includes('ITA')).length > 0) ? 'btn-ita' : '')" onclick="$('.show').removeClass('show')">
+                           <img v-bind:src="EventsList[sport][0].icon" width="32" height="32">
+                           {{sport}}
+                           <i v-if="EventsList[sport].filter(x => x.medalFlag.includes('1')).length > 0" class="fa fa-medal"></i>
+                           </button>
+                        </div>
+                        <!-- Schedule -->
+                        <div style="padding: 8px;" v-for="(sport, index) in Object.keys(EventsList)" class="collapse col-sm-12" :id="'collapse' + index">
+                           <table style="width: 100%" >
+                              <tbody>
+                              <thead>
+                                 <th>Event Name</th>
+                                 <th>Start Time</th>
+                                 <th>Status</th>
+                                 <th>Winner</th>
+                              </thead>
+                              <tr v-if="EventsList[sport].length === 0">
+                                 <td>No data</td>
+                              </tr>
+                              <tr v-else v-for="event in EventsList[sport]">
+                                 <td>
+                                    <img v-if="((event.participants_noc.includes('ITA')) ? 'bg-ita' : '')" src="img/flags/ITA.png" height="12" width="21" style="margin-right: 4px;"></img>
+                                    <i :class="'fas fa-' + event.gender" style="margin-right: 4px;"></i>
+                                    <a :href="event.link" target="_blank" style="color: black"  >{{event.name}}</a>
+                                    <i v-if="event.medalFlag == '1'" class="fa fa-medal"></i>
+                                 </td>
+                                 <td>{{event.fullStartDate}}</td>
+                                 <td>
+                                    <span :style="{ color: event.color }">
+                                    <i class="fas fa-circle"></i>
+                                    {{event.status}}
+                                    </span>
+                                 </td>
+                                 <td>
+                                 </td>
+                              </tr>
+                              </tbody>
+                           </table>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <!-- Italians Today -->
+            <div class="col-sm-4">
+               <div class="card_container">
+                  <div class="card_title">
+                     <h5 style="font-size: 1.5rem;">Italians Today</h5>
+                  </div>
+                  <div class="card_body_lg">
+                    <div id="todayitalians" class="carousel slide" data-ride="carousel"  data-interval="7500">
+                      <div class="carousel-inner">
+                        <div v-for="(italian, index) in ItaliansList" :class="'carousel-item ' + ((index == 0) ? 'active' : '')">
+                          <div class="row">
+                            <div class="col-sm-6"> 
+                                  <img :src="italian.img.replace('../../../', 'https://olympics.com/tokyo-2020/olympic-games/').replace('thumb/', '')" width="50" height="50" style="width:100%; height: 200px">
+                                  <div class="carousel-caption d-none d-md-block">
+                                  </div>
+                                  <a class="carousel-control-prev" href="#todayitalians" role="button" data-slide="prev">
+                                  <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                  <span class="sr-only">Previous</span>
+                                  </a>
+                            <a class="carousel-control-next" href="#todayitalians" role="button" data-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Next</span>
+                            </a>
+                            </div>
+                            <div class="col-sm-6"> 
+                              <a :href="italian.lnk.replace('../../../', 'https://olympics.com/tokyo-2020/olympic-games/').replace('thumb/')" target="_blank" style="color: black;">
+                                <h5>{{italian.longname}}</h5>
+                              </a>
+                              <ul>
+                                <li v-if="italian.extra_data.basicInfo.birthDate != ''">{{italian.extra_data.basicInfo.birthDate}}</li>
+                                <li v-if="italian.extra_data.basicInfo.birthPlace != ''">{{italian.extra_data.basicInfo.birthPlace}}</li>
+                                <li v-if="italian.extra_data.basicInfo.height != ''">{{italian.extra_data.basicInfo.height}}</li>
+                                <li v-if="italian.extra_data.socialMedia.filter(x => x.code == 'INSTAGRAM').length > 0">
+                                  <a :href='italian.extra_data.socialMedia.filter(x => x.code == "INSTAGRAM")[0].link' target="_blank" class="fab fa-instagram"></a>
+                                </li>
+                              </ul>
+                            </div>
+                            <div class="col-sm-12">
+                              <table>
+                                <thead>
+                                  <th>Round</th>
+                                  <th>Opponent</th>
+                                  <th>Status</th>
+                                  <th>Result</th>
+                                </thead>
+                                <tbody>
+                                  <tr v-for="sch in italian.extra_data.schedule">
+                                    <td><a :href="sch.link" target="_blank" style="color: black;">{{sch.name}}</a></td>
+                                    <td v-if="sch.participants_ids != undefined"><a v-if="sch.participants_ids.filter(x => x.longname != italian.longname).length > 0" :href="sch.participants_ids.filter(x => x.longname != italian.longname)[0].lnk.replace('../../../', 'https://olympics.com/tokyo-2020/olympic-games/')" target="_blank" style="color: black;">{{sch.participants_ids.filter(x => x.longname != italian.longname)[0].longname}}</a>
+                                    </td>
+                                    <td>
+                                      <span v-if="sch.status == 'COMPLETED'" :style="{ color: '#6BA368' }">
+                                      <i class="fas fa-check-circle"></i>
+                                      </span>
+                                      <span v-if="sch.status == 'FINISHED'" :style="{ color: '#8B2030' }">
+                                      <i class="fas fa-times-circle"></i>
+                                      </span>
+                                      {{sch.fullStartDate}}
+                                      
+                                    </td>
+                                    <td v-if="sch.participants_winner_ids.length > 0">
+                                      <span v-if="sch.participants_winner_ids[0].longname == italian.longname" :style="{ color: '#6BA368' }">
+                                      <i class="fas fa-check-circle"></i>
+                                      </span>
+                                      <span v-if="sch.participants_winner_ids[0].longname != italian.longname" :style="{ color: '#8B2030' }">
+                                      <i class="fas fa-times-circle"></i>
+                                      </span>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </div> 
+                          </div>
+                          
+
+
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+   <script type="text/javascript" src="js/icon_cards.js"></script>
+   <script type="text/javascript" src="js/today_events.js"></script>
+   <script type="text/javascript" src="js/today_covid.js"></script>
+   <script type="text/javascript" src="js/today_news.js"></script>
+   <script type="text/javascript" src="js/medal_standings.js"></script>
+   <!--<div class="card_container">
+      <div class="card_title">
+        <h5 style="font-size: 1.5rem;">Italians Today</h5>
+      </div>
+      <div class="card_body">
+        <div id="todayitalians">
+          <table>
+              <thead>
+                <th>Sport</th>
+                <th>Event Name</th>
+                <th>Status</th>
+                <th>Start Time</th>
+                <th>Athletes</th>
+              </thead>                
+              <tbody>
+                <tr v-if="EventsList.length === 0"><td>No data</td></tr>
+                <tr v-for="event in EventsList">
+                  <td>
+                    <img v-bind:src="event.icon" width="32" height="32">
+                    {{event.sportName}}
+                  </td>
+                  <td>
+                    <a :href="event.link" target="_blank" style="color: black"  >{{event.name}}</a>
+                  </td>
+                  <td>
+                    <span :style="{ color: event.color }">
+                      <i class="fas fa-circle"></i>
+                      {{event.status}}
+                    </span>  
+                  </td>
+                  <td>{{event.fullStartDate}}</td>
+                  <td v-if="event.participants_ids.length > 0">
+                    {{event.participants_ids.filter(x => x.noc == 'ITA').map(x => x.name).join(', ')}}
+                  </td>
+      
+                </tr>
+      
+      
+              </tbody>
+          </table>
+       
               
-            </div>
-          </div>
+              
         </div>
-    <div class="col-sm-12">
-        <div class="card_container">
-          <div class="card_title">
-            <h5 style="font-size: 1.5rem;">Events Today</h5>
-          </div>
-          <div class="card_body">
-            <div id="todayevents" class="row">
-
-                <!-- Sports --> 
-                <div class="col-sm-3" v-for="(sport, index) in Object.keys(EventsList)">
-                    <button  class="btn btn-block" style="border-radius: 1rem;" data-toggle="collapse" :data-target="'#collapse' + index" :class="((EventsList[sport].filter(x => x.participants_noc.includes('ITA')).length > 0) ? 'btn-ita' : '')" onclick="$('.show').removeClass('show')">
-                    <img v-bind:src="EventsList[sport][0].icon" width="32" height="32">
-                    {{sport}}
-                    <i v-if="EventsList[sport].filter(x => x.medalFlag.includes('1')).length > 0" class="fa fa-medal"></i>
-                  </button>
-                </div>
-                
-              <!-- Schedule -->
-              <div style="padding: 8px;" v-for="(sport, index) in Object.keys(EventsList)" class="collapse col-sm-12" :id="'collapse' + index">
-                <table style="width: 100%" >
-                <tbody>
-                  <thead>
-                    <th>Event Name</th>
-                    <th>Start Time</th>
-                    <th>End Time</th>
-                    <th>Status</th>
-                  </thead>
-                  <tr v-if="EventsList[sport].length === 0"><td>No data</td></tr>
-                  <tr v-else v-for="event in EventsList[sport]">
-                    <td>
-                      <img v-if="((event.participants_noc.includes('ITA')) ? 'bg-ita' : '')" src="img/flags/ITA.png" height="12" width="21" style="margin-right: 4px;"></img>
-                      <i :class="'fas fa-' + event.gender" style="margin-right: 4px;"></i>
-                      <a :href="event.link" target="_blank" style="color: black"  >{{event.name}}</a>
-                      <i v-if="event.medalFlag == '1'" class="fa fa-medal"></i>
-                    </td>
-                    <td>{{event.fullStartDate}}</td>
-                    <td>{{event.fullEndDate}}</td>
-                    <td>
-                      <span :style="{ color: event.color }">
-                        <i class="fas fa-circle"></i>
-                        {{event.status}}
-                      </span>
-                    </td>
-                  </tr>
-                </tbody>
-                </table>
-              </div>    
-            </div>
-              
-            </div>
-          </div>
+          
         </div>
       </div>
-    </div>
-
-      <div class="col-sm-4">
-        <div class="card_container">
-          <div class="card_title">
-            <h5 style="font-size: 1.5rem;">COVID-19</h5>
-          </div>
-          <div class="card_body">
-              <div class="chart">
-                <canvas id="chart-line" class="chart-canvas" height="300"></canvas>
-              </div>
-          </div>
-        </div>
-        <div class="card_container">
-          <div class="card_title">
-            <h5 style="font-size: 1.5rem;">Top News</h5>
-          </div>
-          <div class="card_body">
-            <div id="todaynews" class="carousel slide" data-ride="carousel">
-            <div class="carousel-inner">
-              <div v-for="(news, item) in NewsList" :class="'carousel-item ' + news.is_active">
-                <img :src="news.image">
-                <div class="carousel-caption d-none d-md-block">
-                  <a :href="news.link" target="_blank" style="color:white"><h5>{{news.title}}</h5></a>
-                </div>
-              </div>
-            </div>
-            <a class="carousel-control-prev" href="#todaynews" role="button" data-slide="prev">
-              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-              <span class="sr-only">Previous</span>
-            </a>
-            <a class="carousel-control-next" href="#todaynews" role="button" data-slide="next">
-              <span class="carousel-control-next-icon" aria-hidden="true"></span>
-              <span class="sr-only">Next</span>
-            </a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  
-</body>
-
-<script type="text/javascript" src="js/icon_cards.js"></script>
-<script type="text/javascript" src="js/today_events.js"></script>
-<script type="text/javascript" src="js/today_covid.js"></script>
-<script type="text/javascript" src="js/today_news.js"></script>
-<script src="js/athletes.js"></script>
+      </div>-->
